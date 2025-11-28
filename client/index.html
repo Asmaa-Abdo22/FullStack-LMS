@@ -5,6 +5,15 @@
     <link rel="icon" type="image/jpeg" href="./src/assets/logo.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Learning Management System</title>
+     <script>
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  </script>
   </head>
   <body>
     <div id="root"></div>

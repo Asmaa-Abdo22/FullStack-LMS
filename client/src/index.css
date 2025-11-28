@@ -1,4 +1,58 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-primary: #1e40af;
+  --color-primary-light: #3b82f6;
+  --color-primary-dark: #1e3a8a;
+
+  --color-bg-main: #fefefe;
+  --color-bg-secondary: #f8fafc;
+  --color-bg-card: #ffffff;
+  --color-bg-section: #f1f5f9;
+
+  --color-text-main: #1e293b;
+  --color-text-secondary: #475569;
+  --color-text-white: #ffffff;
+
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+
+  
+
+  --shadow-card: 0 4px 12px rgba(30, 64, 175, 0.08);
+  --shadow-nav: 0 2px 8px rgba(30, 64, 175, 0.06);
+}
+
+.dark {
+  --color-primary: #60a5fa;
+  --color-primary-light: #93c5fd;
+  --color-primary-dark: #3b82f6;
+
+  --color-bg-main: #021a56;
+  --color-bg-secondary: #15243b;
+  --color-bg-card: #1e40af;
+  --color-bg-section: #1e3a8a;
+
+  --color-text-main: #f0f9ff;
+  --color-text-secondary: #c0d6f9;
+  --color-text-white: #ffffff;
+
+  --color-border: #3b82f6;
+  --color-border-light: #60a5fa;
+
+ 
+
+  --shadow-card: 0 4px 20px rgba(96, 165, 250, 0.15);
+  --shadow-nav: 0 2px 12px rgba(96, 165, 250, 0.1);
+}
+
 * {
   font-family: "Outfit Variable", sans-serif;
+}
+
+body {
+  background-color: var(--color-bg-main);
+  color: var(--color-text-main);
+  transition: background-color 0.3s, color 0.3s;
 }
