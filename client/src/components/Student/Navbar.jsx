@@ -23,11 +23,7 @@ const Navbar = () => {
   return (
     <div
       className={`flex items-center justify-between px-4 sm:px-10 md:px-14 lg:px-36 border-b py-4 
-      ${
-        isCourseLiStPage
-          ? "bg-(--color-bg-card)"
-          : "bg-(--color-bg-section)"
-      } 
+      ${isCourseLiStPage ? "bg-(--color-bg-card)" : "bg-(--color-bg-section)"} 
       border-(--color-border) text-(--color-text-main)`}
     >
       {/* Logo */}
@@ -56,11 +52,6 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Theme Toggle */}
-      <button onClick={toggleTheme} className="cursor-pointer ml-4">
-        {theme === "dark" ? <Sun color="gold" size={20} /> : <Moon size={20} />}
-      </button>
-
       {/* Mobile Menu */}
       <div className="md:hidden flex items-center gap-2 sm:gap-5 text-(--color-text-secondary)">
         <div className="flex items-center gap-2 cursor-pointer">
@@ -87,6 +78,11 @@ const Navbar = () => {
           </button>
         )}
       </div>
+
+      {/* Theme Toggle */}
+      <button onClick={toggleTheme} className="cursor-pointer ml-4">
+        {theme === "dark" ? <Sun color="gold" size={20} /> : <Moon size={20} />}
+      </button>
     </div>
   );
 };
