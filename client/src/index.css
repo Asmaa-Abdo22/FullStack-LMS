@@ -2,49 +2,45 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --color-primary: #436aea;
-  --color-primary-light: #3b82f6;
-  --color-primary-dark: #1e3a8a;
+  --color-primary: #4f46e5;
+  --color-primary-light: #6366f1;
+  --color-primary-dark: #3730a3;
 
-  --color-bg-main: #fefefe;
-  --color-bg-secondary: #f8fafc;
+  --color-bg-main: #f0f9ff;
+  --color-bg-secondary: #e0f2fe;
   --color-bg-card: #ffffff;
-  --color-bg-section: #f1f5f9;
+  --color-bg-section: #dbeafe;
 
-  --color-text-main: #1e293b;
-  --color-text-secondary: #9fa7b4;
+  --color-text-main: #111827;
+  --color-text-secondary: #4b5563;
   --color-text-white: #ffffff;
 
-  --color-border: #697484;
-  --color-border-light: #f1f5f9;
+  --color-border: #bfdbfe;
+  --color-border-light: #dbeafe;
 
-  
-
-  --shadow-card: 0 4px 12px rgba(30, 64, 175, 0.08);
-  --shadow-nav: 0 2px 8px rgba(30, 64, 175, 0.06);
+  --shadow-card: 0 4px 12px rgba(79, 70, 229, 0.08);
+  --shadow-nav: 0 2px 8px rgba(79, 70, 229, 0.06);
 }
 
 .dark {
-  --color-primary: #60a5fa;
-  --color-primary-light: #93c5fd;
-  --color-primary-dark: #3b82f6;
+  --color-primary: #818cf8;
+  --color-primary-light: #a5b4fc;
+  --color-primary-dark: #6366f1;
 
-  --color-bg-main: #02184e;
-  --color-bg-secondary: #15243b;
-  --color-bg-card: #1e40af;
-  --color-bg-section: #1e3a8a;
+  --color-bg-main: #0c1a32;
+  --color-bg-secondary: #162544;
+  --color-bg-card: #1e293b;
+  --color-bg-section: #27354a;
 
-  --color-text-main: #f0f9ff;
-  --color-text-secondary: #c0d6f9;
+  --color-text-main: #f1f5f9;
+  --color-text-secondary: #a5b4d6;
   --color-text-white: #ffffff;
 
-  --color-border: #3b82f6;
-  --color-border-light: #60a5fa;
+  --color-border: #475885;
+  --color-border-light: #374151;
 
- 
-
-  --shadow-card: 0 4px 20px rgba(96, 165, 250, 0.15);
-  --shadow-nav: 0 2px 12px rgba(96, 165, 250, 0.1);
+  --shadow-card: 0 4px 20px rgba(129, 140, 248, 0.15);
+  --shadow-nav: 0 2px 12px rgba(129, 140, 248, 0.1);
 }
 
 * {
