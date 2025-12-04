@@ -67,7 +67,7 @@ const Footer = () => {
                   The latest news, articles, and resources, sent to your inbox
                   weekly.
                 </p>
-                <div className="flex items-center gap-2 pt-4">
+                <div className="flex flex-col md:flex-row items-center gap-2 pt-4">
                   <input
                     className="border border-(--color-border) placeholder-(--color-text-secondary) focus:ring-2 ring-(--color-primary) outline-none w-full max-w-64 h-9 rounded px-2 bg-transparent"
                     type="email"
