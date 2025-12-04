@@ -8,21 +8,25 @@ const CourseSection = () => {
   return (
     <>
       <div className="py-16 md:px-40 px-3 ">
-        <h2 className="text-xl md:text-3xl font-medium text-(--color-primary) capitalize">
-          Learn from the best
-        </h2>
-        <p className="text-sm md:text-base mt-4  mb-15 font-medium text-(--color-text-secondary) text-justify md:text-center">
-          Discover our top-rated courses across various categories. From coding
-          and design to <br/> business and wellness, our courses are crafted to
-          deliver results.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-2 md:px-0 my-10 md:my-16 ">
+        {/* Section Header */}
+        <div className="text-center mb-12 md:mb-16">
+         
+          <h2 className="text-2xl md:text-4xl font-bold text-(--color-primary) mb-4">
+            Learn from the best
+          </h2>
+          <p className="text-base md:text-lg text-(--color-text-secondary) max-w-3xl mx-auto leading-relaxed">
+            Discover our top-rated courses across various categories. From
+            coding and design to <br /> business and wellness, our courses are
+            crafted to deliver results.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7 px-2 md:px-0 my-10 md:my-16 ">
           {allCourses.slice(0, 4).map((course, index) => (
             <CourseCard course={course} key={index} />
           ))}
         </div>
         <Link
-          className="px-10 py-3  rounded  text-(--color-primary-dark) border border-(--color-border)"
+          className="px-10 py-3 rounded-lg font-semibold text-(--color-primary-dark) bg-(--color-bg-secondary) hover:bg-(--color-bg-section) border border-(--color-border) hover:border-(--color-primary) transition-all duration-300  hover:shadow-card"
           to="/course-list"
           onClick={() =>
             scrollTo({

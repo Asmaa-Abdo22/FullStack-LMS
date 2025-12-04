@@ -1,11 +1,13 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import { User, Sun, Moon } from "lucide-react";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { applyTheme } from "../../ThemeToogle";
+import { AppContextt } from "../../Context/AppContext";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const isCourseLiStPage = location.pathname.includes("/course-list");
   const { openSignIn } = useClerk();
@@ -19,22 +21,35 @@ const Navbar = () => {
     setTheme(next);
     applyTheme(next);
   };
+  const { isEducator, setIsEducator } = useContext(AppContextt);
 
   return (
     <div
       className={`flex items-center justify-between px-4 sm:px-10 md:px-14 lg:px-36 border-b py-4 
-      ${isCourseLiStPage ? "bg-(--color-bg-card)" : "bg-(--color-bg-section)"} 
+      ${isCourseLiStPage ? "bg-(--color-bg-card)" : "bg-(--color-bg-secondary)"} 
       border-(--color-border) text-(--color-text-main)`}
     >
       {/* Logo */}
-      <h2 className="font-bold text-3xl cursor-pointer">Edemy</h2>
+      <h2
+        className="font-bold text-3xl cursor-pointer"
+        onClick={() => navigate("/")}
+      >
+        Edemy
+      </h2>
 
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center gap-5 text-(--color-text-secondary)">
         <div className="flex items-center gap-5 cursor-pointer">
           {user && (
             <>
-              <button className="cursor-pointer">Become Educator</button>
+              <button
+                onClick={() => {
+                  navigate("/educator");
+                }}
+                className="cursor-pointer"
+              >
+                {isEducator ? " Educator Dashboard" : "Become Educator"}
+              </button>
               <Link to="/my-enrollments">My Enrollments</Link>
             </>
           )}
@@ -57,8 +72,13 @@ const Navbar = () => {
         <div className="flex items-center gap-2 cursor-pointer">
           {user && (
             <>
-              <button className="cursor-pointer text-sm">
-                Become Educator
+              <button
+                onClick={() => {
+                  navigate("/educator");
+                }}
+                className="cursor-pointer text-sm"
+              >
+                {isEducator ? " Educator Dashboard" : "Become Educator"}
               </button>
               <Link to="/my-enrollments" className="text-sm">
                 My Enrollments

@@ -4,6 +4,9 @@ import mainImg from "../../assets/onlienn.jpeg";
 import Companies from "../../components/Student/Companies";
 
 import CourseSection from "../../components/Student/CourseSection";
+import TestimonialsSection from "../../components/Student/TestimonialsSection";
+import CallToAction from "../../components/Student/CallToAction";
+import Footer from "../../components/Student/Footer";
 
 const Home = () => {
   return (
@@ -13,9 +16,12 @@ const Home = () => {
     >
       <div className="absolute inset-0 bg-black/55 z-0 h-full"></div>
       <Hero />
-      <SearchBar/>
-      <Companies/>
-      <CourseSection/>
+      <SearchBar />
+      <Companies />
+      <CourseSection />
+      <TestimonialsSection />
+      <CallToAction/>
+      <Footer/>
     </div>
   );
 };
