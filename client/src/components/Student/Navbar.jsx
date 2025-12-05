@@ -25,7 +25,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={`flex items-center justify-between px-4 sm:px-10 md:px-14 lg:px-36 border-b py-4 
+      className={`fixed w-full z-99 flex items-center justify-between px-4 sm:px-10 md:px-14 lg:px-36 border-b py-4 
       ${isCourseLiStPage ? "bg-(--color-bg-card)" : "bg-(--color-bg-secondary)"} 
       border-(--color-border) text-(--color-text-main)`}
     >
@@ -60,7 +60,7 @@ const Navbar = () => {
         ) : (
           <button
             onClick={openSignIn}
-            className="bg-(--color-primary) text-(--color-text-white) px-5 py-1.5 rounded-full"
+            className="cursor-pointer bg-(--color-primary) text-(--color-text-white) px-5 py-1.5 rounded-full"
           >
             Create Account
           </button>
@@ -92,7 +92,7 @@ const Navbar = () => {
         ) : (
           <button
             onClick={openSignIn}
-            className="flex items-center gap-2 bg-(--color-primary) text-(--color-text-white) px-3 py-1 text-sm rounded-full"
+            className="flex cursor-pointer items-center gap-2 bg-(--color-primary) text-(--color-text-white) px-3 py-1 text-sm rounded-full"
           >
             <User size={16} /> Create Account
           </button>

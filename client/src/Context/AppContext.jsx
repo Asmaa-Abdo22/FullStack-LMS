@@ -24,7 +24,7 @@ export const AppContexttProvider = ({ children }) => {
     });
     return totalRating / course.courseRatings.length;
   };
-   //* Fetch All Testimonials
+  
    
   useEffect(() => {
     fetchAllCourses();

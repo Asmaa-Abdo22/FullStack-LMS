@@ -7,7 +7,7 @@ const CourseSection = () => {
   const { allCourses } = useContext(AppContextt);
   return (
     <>
-      <div className="py-16 md:px-40 px-3 ">
+      <div className="py-16 mt-25 md:mt-95 lg:mt-20 md:px-40 px-3 ">
         {/* Section Header */}
         <div className="text-center mb-12 md:mb-16">
          

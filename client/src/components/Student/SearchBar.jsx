@@ -21,9 +21,9 @@ const SearchBar = ({ data }) => {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            type="text"
+            type="search"
             placeholder="Search For Courses ...."
-            className="placeholder-gray-400/60 focus:outline-0 flex-1 text-white"
+            className="placeholder-gray-400/60 focus:outline-0 flex-1 text-gray-400/90"
           />
           <button className="cursor-pointer bg-(--color-primary) text-white rounded px-4 py-1 ">
             Search

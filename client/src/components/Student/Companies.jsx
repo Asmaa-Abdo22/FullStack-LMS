@@ -4,7 +4,7 @@ const Companies = () => {
   return (
     <>
       <div className="pt-5 relative z-1 ">
-        <p className="text-gray-400">Trusted by learners from</p>
+        <p className="text-gray-200">Trusted by learners from</p>
         <div className="flex gap-9 md:gap-12 pt-10  flex-wrap items-center flex-row justify-center  pb-3">
           <img
             src={assets.microsoft_logo}

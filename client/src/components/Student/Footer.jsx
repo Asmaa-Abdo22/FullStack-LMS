@@ -1,6 +1,7 @@
 
 
 const Footer = () => {
+ 
   return (
     <>
       <div className="px-6 md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-(--color-text-secondary)          bg-(--color-bg-secondary)">
