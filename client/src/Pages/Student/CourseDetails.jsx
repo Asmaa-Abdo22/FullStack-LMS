@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContextt } from "../../Context/AppContext";
 import Loading from "../../components/Student/Loading";
-import { Star } from "lucide-react";
+import { MoveDown, Star } from "lucide-react";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -74,14 +74,15 @@ const CourseDetails = () => {
                 greatStack
               </h3>
             </div>
-            <div className="pt-8 text-gray-800">
+            <div className="pt-8 text-gray-300">
               <h2 className="text-xl font-semibold">Course Structure</h2>
               <div className="pt-5">
                 {courseData.courseContent.map((chapter, index) => (
                   <div key={index}>
                     <div>
                       <div>
-                        
+                        <MoveDown />
+                        <p>{chapter.chapterTitle}</p>
                       </div>
                     </div>
                   </div>
