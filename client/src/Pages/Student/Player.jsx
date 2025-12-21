@@ -1,9 +1,14 @@
-import React from 'react'
-
 const Player = () => {
   return (
-    <div>Player</div>
-  )
-}
+    <>
+      <div>
+        {/* left */}
+        <div></div>
+        {/* right */}
+        <div></div>
+      </div>
+    </>
+  );
+};
 
-export default Player
+export default Player;
