@@ -21,7 +21,6 @@
     "react-dom": "^19.2.0",
     "react-loader-spinner": "^8.0.0",
     "react-router-dom": "^7.9.6",
-    "react-simple-star-rating": "^5.1.7",
     "react-youtube": "^10.1.0",
     "tailwindcss": "^4.1.17",
     "uniqid": "^5.4.0"

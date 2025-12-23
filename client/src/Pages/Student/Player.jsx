@@ -1,19 +1,13 @@
 import { useParams } from "react-router-dom";
 import { AppContextt } from "../../Context/AppContext";
 import { useState, useContext, useEffect } from "react";
-import { BookOpen, CirclePlay, Clock, MoveDown, Star } from "lucide-react";
+import {  CirclePlay,  MoveDown } from "lucide-react";
 import humanizeDuration from "humanize-duration";
 import YouTube from "react-youtube";
+import Rating from "../../components/Student/Rating";
 
 const Player = () => {
-  const {
-    allCourses,
-    calculateRating,
-    calculateNoOfLectures,
-    calculateCourseDuration,
-    calculateChapterTime,
-    enrolledCourses,
-  } = useContext(AppContextt);
+  const { calculateChapterTime, enrolledCourses } = useContext(AppContextt);
   const { courseId } = useParams();
   const [courseData, setCourseData] = useState(null);
   const [openIndex, setOpenIndex] = useState(null);
@@ -106,6 +100,11 @@ const Player = () => {
               </div>
             ))}
           </div>
+          {/* rating the course */}
+          <div className="flex items-center gap-2 py-3 mt-10">
+            <h2 className="text-xl font-bold ">Rate This Course : </h2>
+            <Rating userRating={0} />
+          </div>
         </div>
         {/* right */}
         <div className="w-full md:w-[40%] py-5 px-5 rounded-xl border border-(--color-border) bg-(--color-bg-card) shadow-card  ">
@@ -118,7 +117,7 @@ const Player = () => {
               />
               <div className="flex items-center justify-between mt-4">
                 <p className="text-(--color-text-secondary) font-medium">
-                  {playerData.chapter} . {playerData.lecture}{" "}
+                  {playerData.chapter} . {playerData.lecture} -
                   {playerData.lectureTitle}
                 </p>
                 <button className="cursor-pointer px-4 py-1 bg-linear-to-r from-(--color-primary) to-(--color-primary-light)/60 text-(--color-text-white) rounded-lg font-medium hover:shadow-lg  active:scale-95 transition-all duration-300">
