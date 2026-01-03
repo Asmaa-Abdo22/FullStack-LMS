@@ -1,6 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@fontsource-variable/outfit";
+import "quill/dist/quill.snow.css";
+
 import "./index.css";
 import App from "./App.jsx";
 import { AppContexttProvider } from "./Context/AppContext.jsx";

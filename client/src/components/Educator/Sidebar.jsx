@@ -26,14 +26,14 @@ const Sidebar = () => {
   ];
   return (
     isEducator && (
-      <div className="flex flex-col gap-4 pt-20 border-r border-(--color-border) min-h-screen bg-(--color-bg-card) w-10 md:w-64 items-center ">
+      <div className="flex flex-col gap-4 pt-20 border-r border-(--color-border) min-h-screen bg-(--color-bg-card) w-10 md:w-64 items-center  rounded-lg  ">
         {menuItems.map((item, index) => (
           <NavLink
             key={item.name}
             to={item.path}
             end={item.path === "/educator"}
             className={({ isActive }) =>
-              `flex items-center gap-2 px-2 py-2  w-full  transition-colors duration-300 ${
+              `flex items-center gap-2 px-2 py-2  w-full hover:bg-(--color-bg-secondary)  transition-colors duration-300 ${
                 isActive 
                   ? " bg-(--color-bg-secondary) border-r-[6px] border-r-(--color-primary-light)"
                   : "bg-(--color-bg-section)/20"
