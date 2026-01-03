@@ -2,7 +2,7 @@ import uniqid from "uniqid";
 import Quill from "quill";
 import UploadICON from "../../assets/uploadIcon.png";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, LocateFixed } from "lucide-react";
+import { ChevronDown, LocateFixed, X } from "lucide-react";
 
 const AddCourse = () => {
   const quillRef = useRef(null);
@@ -22,6 +22,79 @@ const AddCourse = () => {
     isPreviewFree: false,
   });
 
+  const handleChapter = (action, chapterId) => {
+    if (action === "add") {
+      const title = prompt("Enter Chapter Name:");
+      if (title) {
+        const newChapter = {
+          chapterId: uniqid(),
+          chapterTitle: title,
+          chapterContent: [],
+          collapsed: false,
+          chapterOrder:
+            chapters.length > 0 ? chapters.slice(-1)[0].chapterOrder + 1 : 1,
+        };
+        setChapters([...chapters, newChapter]);
+      }
+    } else if (action === "remove") {
+      setChapters(
+        chapters.filter((chapter) => chapter.chapterId !== chapterId)
+      );
+    } else if (action === "toggle") {
+      setChapters(
+        chapters.map((chapter) =>
+          chapter.chapterId === chapterId
+            ? { ...chapter, collapsed: !chapter.collapsed }
+            : chapter
+        )
+      );
+    }
+  };
+
+  const handleLecture = (action, chapterId, lectureIndex) => {
+    if (action === "add") {
+      setCurrentChapterId(chapterId);
+      setShowPopup(true);
+    } else if (action === "remove") {
+      setChapters(
+        chapters.map((chapter) => {
+          if (chapter.chapterId === chapterId) {
+            chapter.chapterContent.splice(lectureIndex, 1);
+          }
+          return chapter;
+        })
+      );
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  };
+  const addLecture = () => {
+    setChapters(
+      chapters.map((chapter) => {
+        if (chapter.chapterId === currentChapterId) {
+          const newLecture = {
+            ...lectureDetails,
+            lectureOrder:
+              chapter.chapterContent.length > 0
+                ? chapter.chapterContent.slice(-1)[0].lectureOrder + 1
+                : 1,
+            lectureId: uniqid(),
+          };
+          chapter.chapterContent.push(newLecture);
+        }
+        return chapter;
+      })
+    );
+
+    setShowPopup(false);
+    setLectureDetails({
+      lecturer: "",
+      lectureDuration: "",
+      lectureUrl: "",
+      isPreviewFree: false,
+    });
+  };
   useEffect(() => {
     if (!quillRef.current && editorRef.current) {
       quillRef.current = new Quill(editorRef.current, {
@@ -32,11 +105,15 @@ const AddCourse = () => {
 
   return (
     <>
-      <div className="min-h-screen flex flex-col items-start gap-8 p-4 w-full">
-        <form className="max-w-2xl w-full flex flex-col space-y-5">
-          {/* title */}
+      <div className="min-h-screen flex flex-col items-start gap-8 p-4 w-full mb-10">
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-2xl w-full flex flex-col space-y-5"
+        >
           <div className="flex flex-col gap-3">
-            <label htmlFor="title" className="text-(--color-text-main)">Course Title</label>
+            <label htmlFor="title" className="text-(--color-text-main)">
+              Course Title
+            </label>
             <input
               type="text"
               id="title"
@@ -46,17 +123,17 @@ const AddCourse = () => {
               className="border border-(--color-border) p-2 rounded focus:outline-0 bg-(--color-bg-card) text-(--color-text-main)"
             />
           </div>
-          
-          {/* description */}
+
           <div className="flex flex-col gap-3">
             <p className="text-(--color-text-main)">Course Description</p>
             <div ref={editorRef}></div>
           </div>
-          
-          {/* thumbnail */}
+
           <div className="flex flex-col md:flex-row items-center justify-between flex-wrap gap-4">
             <div className="flex flex-col gap-3">
-              <label htmlFor="price" className="text-(--color-text-main)">Course Price</label>
+              <label htmlFor="price" className="text-(--color-text-main)">
+                Course Price
+              </label>
               <input
                 type="number"
                 name="price"
@@ -91,8 +168,7 @@ const AddCourse = () => {
               </label>
             </div>
           </div>
-          
-          {/* discount */}
+
           <div className="flex flex-col gap-3">
             <p className="text-(--color-text-main)">Discount %</p>
             <input
@@ -107,13 +183,16 @@ const AddCourse = () => {
               className="border border-(--color-border) p-2 rounded focus:outline-0 bg-(--color-bg-card) text-(--color-text-main)"
             />
           </div>
-          
-          {/* adding chapters & lectures */}
+
           {chapters.map((chapter, chapterIndex) => (
-            <div key={chapterIndex} className="bg-(--color-bg-card) border border-(--color-border) rounded-lg mb-4">
+            <div
+              key={chapterIndex}
+              className="bg-(--color-bg-card) border border-(--color-border) rounded-lg mb-4"
+            >
               <div className="flex justify-between items-center p-4 border-b border-(--color-border)">
                 <div className="flex items-center">
                   <ChevronDown
+                    onClick={() => handleChapter("toggle", chapter.chapterId)}
                     className={`mr-2 cursor-pointer transition-all text-(--color-primary) ${
                       chapter.collapsed && "-rotate-90"
                     }`}
@@ -125,7 +204,10 @@ const AddCourse = () => {
                 <span className="text-(--color-text-secondary)">
                   {chapter.chapterContent.length} Lectures
                 </span>
-                <LocateFixed className="cursor-pointer text-(--color-primary)" />
+                <X
+                  onClick={() => handleChapter("remove", chapter.chapterId)}
+                  className="cursor-pointer text-(--color-primary)"
+                />
               </div>
 
               {!chapter.collapsed && (
@@ -147,23 +229,44 @@ const AddCourse = () => {
                         </a>{" "}
                         - {lecture.isPreviewFree ? "Free Preview" : "Paid"}
                       </span>
+                      <X
+                        className="cursor-pointer text-red-500"
+                        onClick={() =>
+                          handleLecture(
+                            "remove",
+                            chapter.chapterId,
+                            lectureIndex
+                          )
+                        }
+                      />
                     </div>
                   ))}
-                  <div className="inline-flex p-2 rounded bg-(--color-bg-secondary) mt-2 cursor-pointer text-(--color-text-main)">
+                  <div
+                    onClick={() => handleLecture("add", chapter.chapterId)}
+                    className="inline-flex p-2 rounded bg-(--color-bg-secondary) mt-2 cursor-pointer text-(--color-text-main)"
+                  >
                     + Add Lecture
                   </div>
                 </div>
               )}
             </div>
           ))}
-          
-          <div className="flex justify-center items-center p-2 rounded bg-(--color-primary)/10 mt-2 cursor-pointer text-(--color-primary) hover:bg-(--color-primary)/20 transition-colors">
+
+          <div
+            onClick={() => handleChapter("add")}
+            className="flex justify-center items-center p-2 rounded bg-(--color-primary)/10 mt-2 cursor-pointer text-(--color-primary) hover:bg-(--color-primary)/20 transition-colors"
+          >
             + Add Chapter
           </div>
 
           {showPopup && (
             <div className="fixed inset-0 flex items-center justify-center bg-black/50">
               <div className="bg-(--color-bg-card) text-(--color-text-main) p-6 rounded-lg relative w-full max-w-96 border border-(--color-border)">
+                <X
+                  className="absolute top-3 right-3 cursor-pointer text-red-500"
+                  size={24}
+                  onClick={() => setShowPopup(false)}
+                />
                 <h2 className="text-lg font-semibold mb-4">Add Lecture</h2>
                 <div className="mb-3">
                   <p className="text-(--color-text-main)">Lecture Title</p>
@@ -221,16 +324,16 @@ const AddCourse = () => {
                     }
                   />
                 </div>
-                <button className="w-full bg-linear-to-r from-(--color-primary) to-(--color-primary-light) text-white py-2 rounded-lg hover:shadow-lg transition-all">
+                <button onClick={addLecture} className="w-full bg-linear-to-r from-(--color-primary) to-(--color-primary-light)/50 text-white py-2 rounded-lg hover:shadow-lg transition-all cursor-pointer">
                   Add
                 </button>
               </div>
             </div>
           )}
-          
-          <button 
-            type="submit" 
-            className="bg-linear-to-r from-(--color-primary) to-(--color-primary-light)/70 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all cursor-pointer"
+
+          <button
+            type="submit"
+            className="bg-linear-to-r from-(--color-primary) to-(--color-primary-light)/50 text-white py-1.5 rounded-lg font-semibold hover:shadow-lg transition-all cursor-pointer"
           >
             Add Course
           </button>
