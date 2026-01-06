@@ -37,7 +37,7 @@ const CourseCard = ({ course }) => {
 
         {/* Educator */}
         <p className="text-(--color-text-secondary) text-sm font-medium">
-         GreatStack
+        {course.educator.name}
         </p>
 
         {/* Rating Section */}

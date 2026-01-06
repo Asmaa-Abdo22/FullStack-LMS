@@ -5,6 +5,8 @@ import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 import { useContext, useState } from "react";
 import { applyTheme } from "../../ThemeToogle";
 import { AppContextt } from "../../Context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -21,12 +23,41 @@ const Navbar = () => {
     setTheme(next);
     applyTheme(next);
   };
-  const { isEducator, setIsEducator } = useContext(AppContextt);
+  const { isEducator, setIsEducator, getToken, backendUrl } =
+    useContext(AppContextt);
+
+  const becomeEducator = async () => {
+    try {
+      if (isEducator) {
+        navigate("/educator");
+        return;
+      }
+      const token = await getToken();
+      const { data } = await axios.get(
+        `${backendUrl}/api/educator/update-role`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data.success) {
+        setIsEducator(true);
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div
       className={`fixed w-full z-99 flex items-center justify-between px-4 sm:px-10 md:px-14 lg:px-36 border-b py-4 
-      ${isCourseLiStPage ? "bg-(--color-bg-card)" : "bg-(--color-bg-secondary)"} 
+      ${
+        isCourseLiStPage ? "bg-(--color-bg-card)" : "bg-(--color-bg-secondary)"
+      } 
       border-(--color-border) text-(--color-text-main)`}
     >
       {/* Logo */}
@@ -43,9 +74,7 @@ const Navbar = () => {
           {user && (
             <>
               <button
-                onClick={() => {
-                  navigate("/educator");
-                }}
+                onClick={becomeEducator}
                 className="cursor-pointer"
               >
                 {isEducator ? " Educator Dashboard" : "Become Educator"}
@@ -73,9 +102,7 @@ const Navbar = () => {
           {user && (
             <>
               <button
-                onClick={() => {
-                  navigate("/educator");
-                }}
+                onClick={becomeEducator}
                 className="cursor-pointer text-sm"
               >
                 {isEducator ? " Educator Dashboard" : "Become Educator"}

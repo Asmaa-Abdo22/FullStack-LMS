@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "@fontsource-variable/outfit";
 import "quill/dist/quill.snow.css";
 
+import { ToastContainer } from "react-toastify";
 import "./index.css";
 import App from "./App.jsx";
 import { AppContexttProvider } from "./Context/AppContext.jsx";
@@ -17,6 +18,11 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
       <AppContexttProvider>
+        <ToastContainer
+          position="top-center"
+          autoClose={2000}
+          hideProgressBar={false}
+        />
         <App />
       </AppContexttProvider>
     </ClerkProvider>

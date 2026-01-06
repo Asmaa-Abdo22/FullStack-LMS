@@ -5,6 +5,8 @@ import Loading from "../../components/Student/Loading";
 import { BookOpen, CirclePlay, Clock, MoveDown, Star } from "lucide-react";
 import humanizeDuration from "humanize-duration";
 import YouTube from "react-youtube";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -15,15 +17,63 @@ const CourseDetails = () => {
     calculateNoOfLectures,
     calculateCourseDuration,
     calculateChapterTime,
+    backendUrl,
+    userData,
+    getToken,
   } = useContext(AppContextt);
 
-  const fetchCourseData = () => {
-    setCourseData(allCourses.find((course) => course._id === id));
+  const fetchCourseData = async () => {
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/course/${id}`);
+      if (data.success) {
+        setCourseData(data.courseData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
   };
-
+  const enrollCourse = async () => {
+    if (!userData) {
+      return toast.warn("Login To Enroll");
+    }
+    if (isAlreadyEnrolled) {
+      return toast.warn(" Already Enrolled");
+    }
+    try {
+      const token = await getToken();
+      const { data } = await axios.post(
+        `${backendUrl}/api/user/purchase`,
+        {
+          courseId: courseData._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data.success) {
+        const { sessionUrl } = data;
+        window.location.replace(sessionUrl);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
   useEffect(() => {
     fetchCourseData();
-  }, [id, allCourses]);
+  }, [id]);
+  useEffect(() => {
+    if (userData && courseData) {
+      setIsAlreadyEnrolled(userData?.enrolledCourses?.includes(courseData._id)|| false);
+    }
+  }, [userData, courseData]);
 
   const [openIndex, setOpenIndex] = useState(null);
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
@@ -51,9 +101,9 @@ const CourseDetails = () => {
                 {calculateRating(courseData)}
               </span>
               <div className="flex">
-                {[...Array(calculateRating(courseData))].map((item) => (
+                {[...Array(calculateRating(courseData))].map((_, index) => (
                   <Star
-                    key={item}
+                    key={index}
                     fill="orange"
                     color="orange"
                     size={16}
@@ -81,7 +131,7 @@ const CourseDetails = () => {
             <div className="flex gap-1 text-(--color-text-secondary)">
               <p>Course By</p>{" "}
               <h3 className="font-semibold capitalize text-(--color-primary) hover:text-(--color-primary-dark) transition-colors">
-                greatStack
+                {courseData.educator.name}
               </h3>
             </div>
 
@@ -244,7 +294,10 @@ const CourseDetails = () => {
               </div>
 
               {/* enrolled button */}
-              <button className="w-full cursor-pointer bg-linear-to-r from-(--color-primary) to-(--color-primary-dark) text-(--color-text-white) font-semibold rounded-lg py-3 hover:shadow-lg   transition-all duration-300">
+              <button
+                onClick={enrollCourse}
+                className="w-full cursor-pointer bg-linear-to-r from-(--color-primary) to-(--color-primary-dark) text-(--color-text-white) font-semibold rounded-lg py-3 hover:shadow-lg   transition-all duration-300"
+              >
                 {isAlreadyEnrolled ? "Already Enrolled" : "Enroll Now"}
               </button>
 
