@@ -2,16 +2,41 @@ import { useEffect, useState } from "react";
 import { dummyDashboardData } from "../../assets/assets";
 import Loading from "../../components/Student/Loading";
 import { User, FileSearch, CircleDollarSign } from "lucide-react";
+import { useContext } from "react";
+import { AppContextt } from "../../Context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
+  const { getToken, backendUrl, isEducator } = useContext(AppContextt);
   const fetchDashboardData = async () => {
-    setDashboardData(dummyDashboardData);
+    try {
+      const token = await getToken();
+      const { data } = await axios.get(
+        `${backendUrl}/api/educator/dashboard`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        setDashboardData(data.dashboardData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    isEducator && fetchDashboardData();
+  }, [isEducator]);
 
   if (!dashboardData) return <Loading />;
 

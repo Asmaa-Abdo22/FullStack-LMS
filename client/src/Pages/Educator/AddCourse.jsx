@@ -1,10 +1,18 @@
 import uniqid from "uniqid";
 import Quill from "quill";
 import UploadICON from "../../assets/uploadIcon.png";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ChevronDown, LocateFixed, X } from "lucide-react";
+import { AppContextt } from "../../Context/AppContext";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const AddCourse = () => {
+  const {
+   
+    getToken,
+    backendUrl,
+  } = useContext(AppContextt);
   const quillRef = useRef(null);
   const editorRef = useRef(null);
 
@@ -67,7 +75,48 @@ const AddCourse = () => {
     }
   };
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
+      if (!image) {
+        toast.error("Thumbnail Not Selected ");
+      }
+      const courseData = {
+        courseTitle,
+        courseDescription: quillRef.current.root.innerHTML,
+        coursePrice: Number(coursePrice),
+        discount: Number(discount),
+        courseContent: chapters,
+      };
+      const formData = new FormData();
+      formData.append("courseData", JSON.stringify(courseData));
+      formData.append("image", image);
+
+      const token = await getToken();
+      const { data } = await axios.post(
+        `${backendUrl}/api/educator/add-course`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        setCourseTitle("");
+        setCoursePrice(0);
+        setDiscount(0);
+        setImage(null);
+        setChapters([]);
+        quillRef.current.root.innerHTML=""
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
   };
   const addLecture = () => {
     setChapters(
@@ -324,7 +373,10 @@ const AddCourse = () => {
                     }
                   />
                 </div>
-                <button onClick={addLecture} className="w-full bg-linear-to-r from-(--color-primary) to-(--color-primary-light)/50 text-white py-2 rounded-lg hover:shadow-lg transition-all cursor-pointer">
+                <button
+                  onClick={addLecture}
+                  className="w-full bg-linear-to-r from-(--color-primary) to-(--color-primary-light)/50 text-white py-2 rounded-lg hover:shadow-lg transition-all cursor-pointer"
+                >
                   Add
                 </button>
               </div>

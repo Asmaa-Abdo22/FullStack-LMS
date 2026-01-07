@@ -1,17 +1,41 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContextt } from "../../Context/AppContext";
 import Loading from "../../components/Student/Loading";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const MyCourses = () => {
-  const { allCourses } = useContext(AppContextt);
-  const [courses, setCourses] = useState([]);
+  const { allCourses, getToken, backendUrl, isEducator } =
+    useContext(AppContextt);
+
+  const [courses, setCourses] = useState(null);
   const fetchEducatorCourses = async () => {
-    setCourses(allCourses);
+    try {
+      const token = await getToken();
+      const { data } = await axios.get(
+        `${backendUrl}/api/educator/courses`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        setCourses(data.courses);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
-    fetchEducatorCourses();
-  }, [allCourses]);
+    isEducator && fetchEducatorCourses();
+  }, [ isEducator]);
 
   if (!courses) return <Loading />;
 
@@ -22,7 +46,7 @@ const MyCourses = () => {
           My Courses
         </h2>
         <table className="border border-(--color-border) bg-(--color-bg-card) rounded-lg w-full max-w-4xl table-fixed md:table-auto ">
-          <thead >
+          <thead>
             <tr className="border-b border-(--color-border) text-sm bg-(--color-bg-secondary) text-left">
               <th className="p-3 text-(--color-text-main) font-semibold">
                 All Courses
