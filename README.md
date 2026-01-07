@@ -3,7 +3,7 @@
 A modern, full-featured **Learning Management System** built with **React & Vite**.  
 This LMS provides a seamless experience for both students and educators — offering an intuitive interface for browsing courses, enrolling, managing content, and tracking progress.
 
-🔗 **Live Demo:** (https://full-stack-lms-inky.vercel.app/)  
+ 
 
 ---
 
