@@ -131,7 +131,7 @@ const CourseDetails = () => {
             <div className="flex gap-1 text-(--color-text-secondary)">
               <p>Course By</p>{" "}
               <h3 className="font-semibold capitalize text-(--color-primary) hover:text-(--color-primary-dark) transition-colors">
-                {courseData.educator.name}
+                {courseData?.educator?.name}
               </h3>
             </div>
 
@@ -141,7 +141,7 @@ const CourseDetails = () => {
                 Course Structure
               </h2>
               <div className="pt-4">
-                {courseData.courseContent.map((chapter, index) => (
+                {courseData?.courseContent.map((chapter, index) => (
                   <div
                     key={index}
                     className="border border-(--color-border) mb-3 rounded-lg overflow-hidden bg-(--color-bg-card)"

@@ -116,7 +116,7 @@ export const AppContexttProvider = ({ children }) => {
   };
   useEffect(() => {
     fetchAllCourses();
-  }, []);
+  }, [allCourses]);
 
   useEffect(() => {
     if (user) {

@@ -279,7 +279,7 @@ const AddCourse = () => {
                         - {lecture.isPreviewFree ? "Free Preview" : "Paid"}
                       </span>
                       <X
-                        className="cursor-pointer text-red-500"
+                        className="cursor-pointer text-(--color-primary)"
                         onClick={() =>
                           handleLecture(
                             "remove",

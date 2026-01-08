@@ -32,12 +32,12 @@ const CourseCard = ({ course }) => {
       <div className="flex flex-col items-start space-y-3 p-4">
         {/* Title */}
         <h3 className="font-semibold text-(--color-primary-light)  line-clamp-2  ">
-          {course.courseTitle}
+          {course?.courseTitle}
         </h3>
 
         {/* Educator */}
         <p className="text-(--color-text-secondary) text-sm font-medium">
-        {course.educator.name}
+        {course?.educator?.name}
         </p>
 
         {/* Rating Section */}
