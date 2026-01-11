@@ -3,17 +3,50 @@ import { CourseProgress } from "../models/CourseProgress.js";
 import { Purchase } from "../models/Purchase.js";
 import User from "../models/User.js";
 import Stripe from "stripe";
+import { clerkClient } from "@clerk/express";
 
 export const getUserData = async (req, res) => {
   try {
     const userId = req.auth.userId;
-    const user = await User.findById(userId);
-
-    if (!user) {
+    
+    if (!userId) {
       return res.json({
         success: false,
-        message: "User Not Found",
+        message: "Unauthorized",
       });
+    }
+
+    // Try to find user in MongoDB
+    let user = await User.findById(userId);
+
+    // If user doesn't exist, create them from Clerk data
+    if (!user) {
+      try {
+        // Get user data from Clerk
+        const clerkUser = await clerkClient.users.getUser(userId);
+        
+        // Create user in MongoDB
+        const firstName = clerkUser.firstName || "";
+        const lastName = clerkUser.lastName || "";
+        const fullName = `${firstName} ${lastName}`.trim();
+        const userName = fullName || clerkUser.username || "User";
+        
+        const userData = {
+          _id: clerkUser.id,
+          email: clerkUser.emailAddresses[0]?.emailAddress || "",
+          name: userName,
+          imageUrl: clerkUser.imageUrl || "",
+          enrolledCourses: [],
+        };
+        
+        user = await User.create(userData);
+      } catch (clerkError) {
+        console.error("Error creating user from Clerk:", clerkError);
+        return res.json({
+          success: false,
+          message: "Failed to fetch user data from Clerk",
+        });
+      }
     }
 
     res.json({
@@ -21,6 +54,7 @@ export const getUserData = async (req, res) => {
       user,
     });
   } catch (error) {
+    console.error("getUserData error:", error);
     res.json({
       success: false,
       message: error.message,

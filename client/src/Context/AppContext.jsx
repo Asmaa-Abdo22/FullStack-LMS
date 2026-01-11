@@ -116,12 +116,17 @@ export const AppContexttProvider = ({ children }) => {
   };
   useEffect(() => {
     fetchAllCourses();
-  }, [allCourses]);
+  }, []);
 
   useEffect(() => {
     if (user) {
       fetchUserData();
       fetchUserEnrolledCourses();
+    } else {
+      // Reset userData when user logs out
+      setUserData(null);
+      setEnrolledCourses([]);
+      setIsEducator(false);
     }
   }, [user]);
   let value = {
