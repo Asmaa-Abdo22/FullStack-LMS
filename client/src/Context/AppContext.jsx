@@ -16,16 +16,24 @@ export const AppContexttProvider = ({ children }) => {
   //* Fetch All Courses
   const fetchAllCourses = async () => {
     try {
+      if (!backendUrl) {
+        console.error("Backend URL is not configured");
+        toast.error("Backend URL is not configured. Please check your environment variables.");
+        return;
+      }
       const { data } = await axios.get(`${backendUrl}/api/course/all`);
       if (data.success) {
-        setAllCourses(data.courses);
+        setAllCourses(data.courses || []);
         return data.courses;
       } else {
-        toast.error(data.message);
+        toast.error(data.message || "Failed to fetch courses");
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.error("Error fetching all courses:", error);
+      const errorMessage = error.response?.data?.message || 
+                          error.message || 
+                          "Network error: Unable to fetch courses. Please check your connection.";
+      toast.error(errorMessage);
     }
   };
   //* Fetch userData
@@ -34,7 +42,15 @@ export const AppContexttProvider = ({ children }) => {
       setIsEducator(true);
     }
     try {
+      if (!backendUrl) {
+        console.error("Backend URL is not configured");
+        return;
+      }
       const token = await getToken();
+      if (!token) {
+        console.error("Token not available");
+        return;
+      }
       const { data } = await axios.get(`${backendUrl}/api/user/data`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,11 +59,17 @@ export const AppContexttProvider = ({ children }) => {
       if (data.success) {
         setUserData(data.user);
       } else {
-        toast.error(data.message);
+        toast.error(data.message || "Failed to fetch user data");
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.error("Error fetching user data:", error);
+      const errorMessage = error.response?.data?.message || 
+                          error.message || 
+                          "Network error: Unable to fetch user data. Please check your connection.";
+      // Don't show toast for user data errors to avoid spam, but log it
+      if (error.response?.status !== 401) {
+        toast.error(errorMessage);
+      }
     }
   };
   //*  Function to calculate average rating of course
@@ -95,7 +117,16 @@ export const AppContexttProvider = ({ children }) => {
   //* Fetch User Enrolled Courses
   const fetchUserEnrolledCourses = async () => {
     try {
+      if (!backendUrl) {
+        console.error("Backend URL is not configured");
+        toast.error("Backend URL is not configured. Please check your environment variables.");
+        return;
+      }
       const token = await getToken();
+      if (!token) {
+        console.error("Token not available");
+        return;
+      }
       const { data } = await axios.get(
         `${backendUrl}/api/user/enrolled-courses`,
         {
@@ -105,13 +136,18 @@ export const AppContexttProvider = ({ children }) => {
         }
       );
       if (data.success) {
-        setEnrolledCourses(data.enrolledCourses.reverse());
+        setEnrolledCourses(data.enrolledCourses?.reverse() || []);
       } else {
-        toast.error(data.message);
+        toast.error(data.message || "Failed to fetch enrolled courses");
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.error("Error fetching enrolled courses:", error);
+      const errorMessage = error.response?.data?.message || 
+                          error.message || 
+                          "Network error: Unable to fetch enrolled courses. Please check your connection.";
+      toast.error(errorMessage);
+      // Set empty array on error to prevent UI issues
+      setEnrolledCourses([]);
     }
   };
   useEffect(() => {
@@ -120,8 +156,13 @@ export const AppContexttProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      fetchUserData();
-      fetchUserEnrolledCourses();
+      // Fetch user data first, then enrolled courses
+      const loadUserData = async () => {
+        await fetchUserData();
+        // Fetch enrolled courses after user data is loaded
+        fetchUserEnrolledCourses();
+      };
+      loadUserData();
     } else {
       // Reset userData when user logs out
       setUserData(null);

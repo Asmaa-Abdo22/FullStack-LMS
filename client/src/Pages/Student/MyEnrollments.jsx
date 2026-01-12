@@ -21,26 +21,44 @@ const MyEnrollments = () => {
   const navigate = useNavigate();
   const getCourseProgress = async () => {
     try {
+      if (!backendUrl) {
+        console.error("Backend URL is not configured");
+        return;
+      }
       const token = await getToken();
+      if (!token) {
+        console.error("Token not available");
+        return;
+      }
       const tempProgressArray = await Promise.all(
         enrolledCourses.map(async (course) => {
-          const { data } = await axios.post(
-            `${backendUrl}/api/user/get-course-progress`,
-            { courseId: course._id },
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          let totalLectures = calculateNoOfLectures(course);
-          const lectureCompleted = data.progressData
-            ? data.progressData.lectureCompleted.length
-            : 0;
-          return { totalLectures, lectureCompleted };
+          try {
+            const { data } = await axios.post(
+              `${backendUrl}/api/user/get-course-progress`,
+              { courseId: course._id },
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+            let totalLectures = calculateNoOfLectures(course);
+            const lectureCompleted = data.progressData
+              ? data.progressData.lectureCompleted.length
+              : 0;
+            return { totalLectures, lectureCompleted };
+          } catch (error) {
+            console.error(`Error fetching progress for course ${course._id}:`, error);
+            // Return default progress for this course
+            return { totalLectures: calculateNoOfLectures(course), lectureCompleted: 0 };
+          }
         })
       );
       setProgressArray(tempProgressArray);
     } catch (error) {
-      toast.error(error.message);
+      console.error("Error fetching course progress:", error);
+      const errorMessage = error.response?.data?.message || 
+                          error.message || 
+                          "Failed to fetch course progress";
+      toast.error(errorMessage);
     }
   };
   useEffect(() => {
@@ -149,7 +167,7 @@ const MyEnrollments = () => {
                             </span>
                             <span>
                               {" "}
-                              of {progressArray[indexx].totalloctures} lessons
+                              of {progressArray[indexx].totalLectures} lessons
                             </span>
                           </>
                         )}
@@ -199,7 +217,7 @@ const MyEnrollments = () => {
           {enrolledCourses.map((course, indexx) => {
             const progress = progressArray[indexx]
               ? (progressArray[indexx].lectureCompleted * 100) /
-                progressArray[indexx].totalloctures
+                progressArray[indexx].totalLectures
               : 0;
             const isCompleted =
               progressArray[indexx] &&
@@ -253,7 +271,7 @@ const MyEnrollments = () => {
                         {progressArray[indexx] && (
                           <span>
                             {progressArray[indexx].lectureCompleted}/
-                            {progressArray[indexx].totalloctures} lessons
+                            {progressArray[indexx].totalLectures} lessons
                           </span>
                         )}
                       </div>
